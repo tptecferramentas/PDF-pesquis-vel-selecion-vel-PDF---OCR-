@@ -190,3 +190,52 @@ startBtn.addEventListener('click', async () => {
         startBtn.innerText = "Processar Novo Arquivo";
     }
 });
+
+// ================= ENVIO DE E-MAIL VIA AJAX (SEM SAIR DA PÁGINA) =================
+
+// Seleciona todos os formulários de contato/orçamento (ambos usam a classe .budget-form)
+const contactForms = document.querySelectorAll('.budget-form');
+
+contactForms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Impede o redirecionamento padrão da página
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerText;
+        
+        // Altera o botão para mostrar que está carregando
+        submitBtn.innerText = "Enviando..."; 
+        submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+
+        // Dispara para o endpoint /ajax/ do FormSubmit para não sair da página
+        fetch("https://formsubmit.co/ajax/tptectecnologias@gmail.com", {
+            method: "POST",
+            headers: { 
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("✅ Mensagem enviada com sucesso! Entraremos em contato em breve.");
+            
+            // Fecha os modais após o envio
+            document.getElementById('budget-modal').classList.remove('active');
+            document.getElementById('support-modal').classList.remove('active');
+            
+            // Limpa os campos do formulário
+            form.reset(); 
+        })
+        .catch(error => {
+            alert("❌ Ocorreu um erro ao enviar. Verifique sua conexão.");
+            console.error(error);
+        })
+        .finally(() => {
+            // Restaura o botão original
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+});
