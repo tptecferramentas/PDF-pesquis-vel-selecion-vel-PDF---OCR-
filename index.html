@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>    
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="ZIKRbAgCIkpnGDstns2HczgLqklEb0ZBFSkoljZPqIo" />
+    
+    <title>Transformar PDF em Pesquisável (OCR) - TP tec</title>
+    <meta name="description" content="Converta PDFs escaneados e imagens em documentos PDF com texto pesquisável e selecionável gratuitamente.">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Bibliotecas Necessárias para o OCR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@v4.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+
+    <div id="page-loader">
+        <div class="spinner-orange"></div>
+        <p>Carregando Ferramenta OCR...</p>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="top-header">
+        <div class="header-content">
+            <div class="logo-wrapper">
+                <a href="https://tptecferramentas.github.io/" style="text-decoration: none; display: flex; align-items: center;">
+                    <img src="logo.png" alt="Logo TP tec" class="header-logo" onerror="this.src='../logo.png'; this.onerror=null;">
+                    <div class="logo-text">TP tec <span class="badge-pro">OCR</span></div>
+                </a>
+            </div>
+            <button class="btn-budget-header" id="open-budget-modal">💻 Orçamento / Criar Site</button>
+        </div>
+    </header>
+
+    <!-- Adsterra Topo -->
+    <div class="ad-container">
+        <script>
+            atOptions = {
+                'key' : '66e510cf5fb42ab9066b080fb8c48c2e',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/66e510cf5fb42ab9066b080fb8c48c2e/invoke.js"></script>
+    </div>
+
+    <main class="container">
+        <!-- Adsterra Esquerda -->
+        <div class="side-ad left-ad">
+            <script>
+                atOptions = {
+                    'key' : '2cadcec815b23b9842036a54bca5bd9c',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/2cadcec815b23b9842036a54bca5bd9c/invoke.js"></script>
+        </div>
+
+        <!-- Área Principal da Ferramenta OCR -->
+        <div class="tool-main-box">
+            <div class="tool-header">
+                <h1>🔎 Tornar PDF Pesquisável (OCR)</h1>
+                <p>Extraia texto de PDFs escaneados ou imagens. Todas as palavras se tornarão selecionáveis e pesquisáveis (Ctrl+F). <em>O processamento é feito no seu navegador, mantenha a aba aberta.</em></p>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="drop-zone">
+                <div class="upload-icon">📄</div>
+                <h3>Arraste e solte seu PDF aqui</h3>
+                <p>ou</p>
+                <input type="file" id="file-input" accept="application/pdf" hidden>
+                <button class="btn-upload" onclick="document.getElementById('file-input').click()">Selecionar Arquivo PDF</button>
+            </div>
+
+            <!-- Painel de Controle -->
+            <div class="control-panel" id="control-panel" style="display: none;">
+                <div class="file-info" id="file-info">Arquivo.pdf</div>
+                
+                <div class="form-group">
+                    <label>Idioma principal do documento:</label>
+                    <select id="lang-select" class="input-select">
+                        <option value="por" selected>Português</option>
+                        <option value="eng">Inglês</option>
+                        <option value="spa">Espanhol</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" id="start-ocr-btn">Iniciar Processamento OCR</button>
+                
+                <!-- Área de Progresso -->
+                <div id="progress-container" style="display: none; margin-top: 20px;">
+                    <p id="progress-text" style="font-size: 0.9rem; color: var(--secondary-blue); margin-bottom: 5px;">Preparando...</p>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+
+                <a id="download-link" class="btn-success" style="display: none;">Baixar PDF Pesquisável ⬇️</a>
+            </div>
+        </div>
+
+        <!-- Adsterra Direita -->
+        <div class="side-ad right-ad">
+            <script>
+                atOptions = {
+                    'key' : '2cadcec815b23b9842036a54bca5bd9c',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/2cadcec815b23b9842036a54bca5bd9c/invoke.js"></script>
+        </div>
+    </main>
+
+    <!-- ================= MODAIS ================= -->
+
+    <!-- 1. Modal de Orçamento -->
+    <div id="budget-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="close-budget">&times;</span>
+            <img src="logo.png" alt="Logo TP tec" class="modal-logo" onerror="this.src='../logo.png'; this.onerror=null;">
+            <h2>💻 Criação de Sites & Orçamentos</h2>
+            <p class="modal-subtitle">Gostaria de um site profissional ou ferramenta personalizada para o seu negócio?</p>
+            
+            <form action="https://formsubmit.co/tptectecnologias@gmail.com" method="POST" class="budget-form">
+                <input type="hidden" name="_subject" value="Novo Pedido de Orçamento - TP tec">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://tptecferramentas.github.io/">
+                
+                <div class="form-group"><input type="text" name="nome" required placeholder="Seu Nome*"></div>
+                <div class="form-group"><input type="email" name="email" required placeholder="Seu E-mail*"></div>
+                <div class="form-group"><input type="tel" name="whatsapp" placeholder="WhatsApp (Opcional)"></div>
+                <div class="form-group"><textarea name="mensagem" rows="4" required placeholder="Descreva como você imagina seu projeto..."></textarea></div>
+                <button type="submit" class="btn-primary">Enviar Solicitação</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Modal de Contato / Suporte -->
+    <div id="support-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="close-support">&times;</span>
+            <img src="logo.png" alt="Logo TP tec" class="modal-logo" onerror="this.src='../logo.png'; this.onerror=null;">
+            <h2>💬 Contato & Suporte</h2>
+            <p class="modal-subtitle">Encontrou algum problema ou tem alguma dúvida? Fale conosco.</p>
+            
+            <form action="https://formsubmit.co/tptectecnologias@gmail.com" method="POST" class="budget-form">
+                <input type="hidden" name="_subject" value="Mensagem de Suporte/Contato - TP tec">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://tptecferramentas.github.io/">
+                
+                <div class="form-group"><input type="text" name="nome" required placeholder="Seu Nome*"></div>
+                <div class="form-group"><input type="email" name="email" required placeholder="Seu E-mail*"></div>
+                <div class="form-group"><textarea name="mensagem" rows="4" required placeholder="Como podemos te ajudar hoje?"></textarea></div>
+                <button type="submit" class="btn-primary">Enviar Mensagem</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante de Suporte (Agora abre o Modal) -->
+    <button class="floating-btn-support" id="open-support-modal" title="Entrar em contato">
+        💬 Contato / Suporte
+    </button>
+
+    <footer>
+        <p>&copy; 2026 TP tec - Ferramentas & Soluções. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
